@@ -7,16 +7,6 @@ require './models/file'
 
 ActiveSupport::LogSubscriber.colorize_logging=false
 
-desc 'Migrate the database through db/migrate. Target specific version with VERSION=X'
-task :migrate => :environment do
-  ActiveRecord::Migrator.migrate('db/migrate', ENV['VERSION'] ? ENV['VERSION'].to_i : nil)
-end
-
-task :environment do
-  ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.yml')))
-  ActiveRecord::Base.logger = Logger.new(File.open('log/database.log', 'a'))
-end
-
 desc 'Create DirDiff inital database'
 task :init, :name, :path do |task, args|
   if File.exist? "db/#{args[:name]}.db"
