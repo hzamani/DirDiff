@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'fileutils'
+require 'pp'
+
+diff = File.open ARGV[0]
+dest = Pathname.new ARGV[1]
+basepath = Pathname diff.readline[0..-2]
+dest = dest + basepath.basename
+dest.mkpath
+
+diff.each_line do |line|
+  if line[0] == '+'
+    entry = Pathname.new line[2..-2]
+    current_dest = dest + entry.relative_path_from(basepath)
+    if entry.directory?
+      dir = dest + current_dest
+      dir.mkpath unless dir.exist?
+    elsif entry.file?
+      FileUtils.copy(entry, current_dest)
+    end
+  end
+end

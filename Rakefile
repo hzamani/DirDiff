@@ -80,6 +80,7 @@ task :diff, :name, :path, :out_file do |task, args|
   puts "Pleas wait ..."
 
   out = File.open args[:out_file], "w"
+  out.write "#{path}\n"
 
   dir = DirDiff::Directory.first
   queue = Queue.new
